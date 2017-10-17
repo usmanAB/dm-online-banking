@@ -24,21 +24,6 @@ public class MyAspect {
     private static final Logger logger = Logger.getLogger(String.valueOf(MyAspect.class));
 
 
-//    @Before("execution(* fr.usman.client.business.services.ClientService.*(..))")
-//    public void logBefore(JoinPoint joinPoint) {
-//
-//        System.out.print("AVANT "+joinPoint.);
-//        logger.info(joinPoint.getSignature().getName()+" ENTRY - parameters\n");
-//    }
-
-
-    @After("execution(* fr.usman.client.business.services.ClientService*.*(..))")
-    public void logAfter(JoinPoint joinPoint) {
-
-        //logger.info(joinPoint.getSignature().getName()+" ENTRY - parameters\n");
-    }
-
-
     @Before("execution(* fr.usman.client.business.controllers.UserController*.*(..)) && @annotation(requestMapping)")
     public void set_controller_methods_name(JoinPoint joinPoint, RequestMapping requestMapping) {
 
@@ -46,7 +31,6 @@ public class MyAspect {
         logger.info("[UserController HTTP VERB-->"+requestMapping.name().toString()+requestMapping.method()[0]+"}");
         logger.info("[UserController HTTP PATH-->"+requestMapping.name().toString()+requestMapping.value()[0]+"}");
         logger.info("[UserController HTTP PAram-->"+requestMapping.name().toString()+requestMapping+"}");
-
     }
 
 
@@ -70,22 +54,4 @@ public class MyAspect {
 
     }
 
-
-
-
-
-//
-//    @Before("execution(* fr.usman.client.business.services.ClientService")
-//    public void before(JoinPoint joinPoint){
-//        System.out.print("AVANT");
-//        System.out.print(joinPoint.getSignature().getName());
-//
-//    }
-//
-//    @After("execution(* fr.usman.client.business.services.ClientService")
-//    public void after(JoinPoint joinPoint){
-//        System.out.print("APRES");
-//        System.out.print(joinPoint.getSignature().getName());
-//
-//    }
 }

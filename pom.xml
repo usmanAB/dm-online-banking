@@ -17,10 +17,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- <java.version>1.8</java.version>-->
-        <spring-boot.version>1.5.7.RELEASE</spring-boot.version>
         <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
-        <start-class>fr.usman.client.business.MainApplication</start-class>
+        <start-class>fr.usman.client.business.OnlineBankingApplication</start-class>
+        <java.version>1.8</java.version>
+
     </properties>
 
 
@@ -34,12 +34,6 @@
 <dependencies>
 
     <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-        <version>${spring-boot.version}</version>
-    </dependency>
-
-    <dependency>
         <groupId>org.aspectj</groupId>
         <artifactId>aspectjrt</artifactId>
         <version>1.8.10</version>
@@ -48,7 +42,6 @@
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
-        <version>${spring-boot.version}</version>
         <scope>test</scope>
     </dependency>
 
@@ -58,5 +51,28 @@
     </dependency>
 </dependencies>
 
+
+
+
+    <build>
+    <plugins>
+        <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
+        <configuration>
+            <archive>
+                <manifest>
+                    <mainClass>fr.usman.client.business.OnlineBankingApplication</mainClass>
+                </manifest>
+            </archive>
+        </configuration>
+    </plugin>
+    </plugins>
+    </build>
 
 </project>
