@@ -1,7 +1,7 @@
 package fr.usman.client.business.repositories;
 
 
-import fr.usman.client.models.UserDto;
+import fr.usman.client.business.models.UserDto;
 
 import java.util.List;
 
