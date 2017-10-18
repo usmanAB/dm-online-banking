@@ -1,7 +1,7 @@
 package fr.usman.client.business.services;
 
 import fr.usman.client.business.repositories.IClientService;
-import fr.usman.client.models.UserDto;
+import fr.usman.client.business.models.UserDto;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
