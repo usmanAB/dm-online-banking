@@ -7,8 +7,8 @@ Step 1 :
 - Extract files
 
 Step 2 :
-- run : "mvn package" from root folder 
-- run : "mvn spring-boot:run" from ***client-management-services*** directory
+- run : "mvn package" from root directory 
+- run : "mvn spring-boot:run" from root directory
 
 Step 3 :  
 Send a request from a client (postman or navigator):
