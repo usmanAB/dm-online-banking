@@ -1,7 +1,7 @@
 package fr.usman.client.business.controllers;
 
 import fr.usman.client.business.services.ClientService;
-import fr.usman.client.models.UserDto;
+import fr.usman.client.business.models.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
