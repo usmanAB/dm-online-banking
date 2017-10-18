@@ -48,5 +48,5 @@ Empty package (to respect rules....)
 
 # Deployment diagram (of components)
 
-https://image.noelshack.com/fichiers/2017/42/3/1508346376-deploymentdiagram1.jpg
- 
+
+![alt text](https://image.noelshack.com/fichiers/2017/42/3/1508346376-deploymentdiagram1.jpg) 
