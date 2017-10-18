@@ -20,9 +20,9 @@ Step 4 :
 Observe log console 
 
 
-This project is a tutorial for people who learn Maven multi-modules projects.  
+# Project's  structure
   
-There's a ***dm-online-banking*** project with a module :
+There's a ***dm-online-banking*** project with only one module :
   
 * ***client-management-services***  
 
