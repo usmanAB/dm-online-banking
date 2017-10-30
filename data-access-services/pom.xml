@@ -78,10 +78,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>gokan.ekinci</groupId>
-			<artifactId>aspectj-aop-utils</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>gokan.ekinci</groupId>-->
+			<!--<artifactId>aspectj-aop-utils</artifactId>-->
+			<!--<version>${project.version}</version>-->
+		<!--</dependency>-->
 	</dependencies>
 </project>

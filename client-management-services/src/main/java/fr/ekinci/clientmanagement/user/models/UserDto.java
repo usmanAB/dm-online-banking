@@ -11,4 +11,7 @@ import lombok.ToString;
 public class UserDto {
 	private String lastName;
 	private String firstName;
+	private long phone;
+	private String address;
+
 }

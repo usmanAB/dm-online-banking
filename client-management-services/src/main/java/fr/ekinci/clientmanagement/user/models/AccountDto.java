@@ -9,6 +9,8 @@ import lombok.ToString;
 @Data
 @ToString
 public class AccountDto {
-    private String accountName;
     private int accountNumber;
+    private Double amount;
+    private UserDto userDto;
+
 }
