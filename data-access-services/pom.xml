@@ -9,9 +9,9 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>client-management-services</artifactId>
+	<artifactId>data-access-services</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>client-management-services</name>
+	<name>data-access-services</name>
 
 	<dependencies>
 		<!-- Spring Boot Starters -->
