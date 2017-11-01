@@ -1,6 +1,7 @@
 package fr.ekinci.clientmanagement.user.controllers;
 
 import fr.ekinci.clientmanagement.user.entities.UserEntity;
+import fr.ekinci.clientmanagement.user.models.AccountDto;
 import fr.ekinci.clientmanagement.user.models.UserDto;
 // import org.springframework.data.domain.PageRequest;
 import fr.ekinci.clientmanagement.user.repositories.UserRepository;
@@ -72,7 +73,10 @@ public class UserController {
 	}
 
 
-
+	@RequestMapping(path = "/account", method = RequestMethod.POST)
+	public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
+		return new ResponseEntity<>(userService.createAccount(accountDto), HttpStatus.OK);
+	}
 
 
 

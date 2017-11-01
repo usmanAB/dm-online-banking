@@ -1,7 +1,8 @@
 package fr.ekinci.clientmanagement.user.controllers;
 
+import fr.ekinci.clientmanagement.user.models.AccountDto;
 import fr.ekinci.clientmanagement.user.models.UserDto;
-// import org.springframework.data.domain.PageRequest;
+import fr.ekinci.clientmanagement.user.service.AdvisorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
+	private AdvisorService advisorService;
+
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<UserDto> get(@PathVariable Long id) {
@@ -23,6 +26,14 @@ public class UserController {
 		final Optional<UserDto> dtoOpt = Optional.of(new UserDto());
 		return (dtoOpt.isPresent()) ?
 			new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(path = "/clientAccount/{id}", method = RequestMethod.GET)
+	public ResponseEntity<AccountDto> getClientAccount(@PathVariable Long id) {
+
+		return new ResponseEntity<>(advisorService.getClientAccountById(id), HttpStatus.OK);
+
+
 	}
 
 	/**
@@ -48,10 +59,19 @@ public class UserController {
 			new ResponseEntity<>(userDtoList, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<UserDto> create(@RequestBody UserDto user) {
+	@RequestMapping(path = "/client", method = RequestMethod.POST)
+	public ResponseEntity<UserDto> createClient(@RequestBody UserDto user) {
 		return new ResponseEntity<>(new UserDto(), HttpStatus.OK);
 	}
+
+	@RequestMapping(path = "/account", method = RequestMethod.POST)
+	public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
+
+		//advisorService.createAccount(accountDto);
+
+		return new ResponseEntity<>(advisorService.createAccount(accountDto), HttpStatus.OK);
+	}
+
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> update(@PathVariable String id, @RequestBody UserDto user) {
@@ -64,6 +84,7 @@ public class UserController {
 		// TODO
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
 
 
 

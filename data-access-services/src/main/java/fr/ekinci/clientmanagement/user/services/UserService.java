@@ -1,7 +1,10 @@
 package fr.ekinci.clientmanagement.user.services;
 
+import fr.ekinci.clientmanagement.user.entities.AccountEntity;
 import fr.ekinci.clientmanagement.user.entities.UserEntity;
+import fr.ekinci.clientmanagement.user.models.AccountDto;
 import fr.ekinci.clientmanagement.user.models.UserDto;
+import fr.ekinci.clientmanagement.user.repositories.AccountRepository;
 import fr.ekinci.clientmanagement.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +18,12 @@ import java.util.stream.Collectors;
 public class UserService implements IUserService {
 
 	private final UserRepository userRepository;
+	private final AccountRepository accountRepository;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, AccountRepository accountRepository) {
 		this.userRepository = userRepository;
+		this.accountRepository = accountRepository;
 	}
 
 	@Override
@@ -61,6 +66,21 @@ public class UserService implements IUserService {
 			.firstName(userEntity1.getFirstName())
 			.lastName(userEntity1.getLastName())
 			.build();
+	}
+
+	@Override
+	public AccountDto createAccount(AccountDto accountDto) {
+		AccountEntity account = new AccountEntity();
+		account.setAccountNumber(accountDto.getAccountNumber());
+		account.setAmount(0);
+		account.setUserId(accountDto.getUserId());
+
+		AccountEntity account1 = accountRepository.save(account);
+		return AccountDto.builder()
+				.accountNumber(account1.getAccountNumber())
+				.amount(account1.getAmount())
+				.userId(account1.getUserId())
+				.build();
 	}
 
 	@Override
