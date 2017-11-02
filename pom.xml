@@ -13,6 +13,7 @@
 		<module>data-access-services</module>
 		<module>aspectj-aop-utils</module>
 		<module>client-services</module>
+		<module>client-models</module>
 		<module>rest-client-utils</module>
 	</modules>
 
