@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
  * @author Gokan EKINCI
@@ -15,6 +16,11 @@ import javax.validation.constraints.Pattern;
 public class UserDto {
 	@Pattern(regexp = "[0-9]{1,}")
 	private String id;
+	private String lastName;
+	private String firstName;
+	private String phone;
+	private String dateOfBirth;
+
 
 	public String getId() {
 		return id;
@@ -35,10 +41,6 @@ public class UserDto {
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
-	private String lastName;
-	private String firstName;
-
 	public String getFirstName() {
 		return firstName;
 	}

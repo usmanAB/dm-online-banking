@@ -3,6 +3,7 @@ package fr.ekinci.dataaccessservice.user.controllers;
 import fr.ekinci.dataaccessservice.user.models.AccountDto;
 import fr.ekinci.dataaccessservice.user.models.UserDto;
 // import org.springframework.data.domain.PageRequest;
+import fr.ekinci.dataaccessservice.user.models.UserInfoDto;
 import fr.ekinci.dataaccessservice.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,48 @@ public class UserController {
 		return (dtoOpt.isPresent()) ?
 			new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+
+	@RequestMapping(path = "/userInfo/{id}", method = RequestMethod.GET)
+	public ResponseEntity<UserInfoDto> getUserInfo(@PathVariable String id) {
+		// TODO
+		final Optional<UserInfoDto> dtoOpt = userService.getUserInfoById(id);
+		System.out.println("ID recu : "+id);
+		return (dtoOpt.isPresent()) ?
+				new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(path = "/consultAccount/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> consultUserAccounts(@PathVariable String id) {
+		final List<AccountDto> userDtoList = userService.getAccountsByUserId(id);
+		return (!userDtoList.isEmpty()) ?
+				new ResponseEntity<>(userDtoList, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@RequestMapping(path = "/addMoney/{id}/{amount}/{accountType}", method = RequestMethod.PUT)
+	public ResponseEntity<String> addMoney(@PathVariable long id, @PathVariable long amount, @PathVariable String accountType) {
+		// TODO
+		String msg = userService.addMoney(id,amount,accountType);
+		System.out.println("ID recu pour ajout argent: "+id);
+		return new ResponseEntity<>(msg, HttpStatus.OK);
+	}
+
+	@RequestMapping(path = "/removeMoney/{id}/{amount}/{accountType}", method = RequestMethod.PUT)
+	public ResponseEntity<String> removeMoney(@PathVariable long id, @PathVariable long amount, @PathVariable String accountType) {
+		// TODO
+		String msg = userService.removeMoney(id,amount, accountType);
+		System.out.println("ID recu pour remove argent: "+id);
+		return new ResponseEntity<>(msg, HttpStatus.OK);
+	}
+
+	@RequestMapping(path = "/userInfo/{id}/{accountType}", method = RequestMethod.POST)
+	public ResponseEntity<AccountDto> getAccountByTypeAndUserId(@PathVariable long id, @PathVariable String accountType) {
+		// TODO
+		final Optional<AccountDto> dtoOpt = userService.getAccountByTypeAndUserId(accountType,id);
+		System.out.println("ID recu : "+id);
+		return (dtoOpt.isPresent()) ?
+				new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
 
 	/**
 	 * If page and size request parameters are filled, return a page. Otherwise, return a list of all elements.
@@ -71,9 +114,9 @@ public class UserController {
 	}
 
 
-	@RequestMapping(path = "/account", method = RequestMethod.POST)
-	public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
-		return new ResponseEntity<>(userService.createAccount(1,accountDto), HttpStatus.OK);
+	@RequestMapping(path = "/account/{id}", method = RequestMethod.POST)
+	public ResponseEntity<AccountDto> createAccount(@PathVariable long id, @RequestBody AccountDto accountDto) {
+		return new ResponseEntity<>(userService.createAccount(id,accountDto), HttpStatus.OK);
 	}
 
 

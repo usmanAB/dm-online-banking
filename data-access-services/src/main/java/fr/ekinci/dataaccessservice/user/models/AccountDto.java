@@ -14,9 +14,8 @@ import javax.validation.constraints.Pattern;
 @ToString
 public class AccountDto {
    // @Pattern(regexp = "[0-9]{1,}")
-    private int accountNumber;
-    private int amount;
-    private int userId;
-    private String type;
-
+    private String accountNumber;
+    private String amount;
+    private String userId;
+    private TypeAccountDto type;
 }

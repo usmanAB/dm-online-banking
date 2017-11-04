@@ -15,14 +15,14 @@ public class AccountEntity implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_number", insertable =false, updatable = false)
-    private int accountNumber;
+    private Long accountNumber;
 
 
     @Column(name = "type")
     private String type;
 
     @Column(name = "amount")
-    private int amount;
+    private long amount;
 //(cascade = {CascadeType.PERSIST})
     @ManyToOne
     private UserEntity userEntity;
