@@ -14,7 +14,7 @@ public interface IUserService {
 
 	UserDto create(UserDto userDto);
 
-	AccountDto createAccount(AccountDto accountDto);
+	AccountDto createAccount(long userId, AccountDto accountDto);
 
 	void delete(String id);
 

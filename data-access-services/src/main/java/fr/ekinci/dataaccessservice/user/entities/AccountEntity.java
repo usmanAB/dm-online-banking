@@ -23,18 +23,7 @@ public class AccountEntity implements java.io.Serializable {
 
     @Column(name = "amount")
     private int amount;
-
-    @Column(name = "userId", nullable = false)
-    private int userId;
-
-//    @ManyToOne
-//    @JoinColumn(referencedColumnName="id")
+//(cascade = {CascadeType.PERSIST})
+    @ManyToOne
     private UserEntity userEntity;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
-    public UserEntity getUserEntity(){
-        return this.userEntity;
-    }
-
 }

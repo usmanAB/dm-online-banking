@@ -3,6 +3,7 @@ package fr.ekinci.dataaccessservice.user.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Data
@@ -24,10 +25,8 @@ public class UserEntity implements java.io.Serializable {
     private AccountEntity accountEntity;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
-    public AccountEntity getAccountEntity() {
-        return this.accountEntity;
-    }
+    @OneToMany(mappedBy = "userEntity")
+    public Set<AccountEntity> account;
 
 
 }

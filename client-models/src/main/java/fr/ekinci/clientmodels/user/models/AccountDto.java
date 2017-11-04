@@ -16,6 +16,6 @@ public class AccountDto {
     private int accountNumber;
     private int amount;
     private int userId;
-    private AccountType type;
+   // private AccountType type;
 
 }

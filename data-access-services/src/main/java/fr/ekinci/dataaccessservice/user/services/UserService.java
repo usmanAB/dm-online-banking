@@ -10,6 +10,7 @@ import fr.ekinci.dataaccessservice.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Entity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,6 +56,15 @@ public class UserService implements IUserService {
 			: Optional.empty();
 	}
 
+/*	public UserDto getUserById2(String id) {
+		UserEntity userEntity = userRepository.findOne(Long.parseLong(id));
+				return UserDto.builder()
+						.id(String.valueOf(userEntity.getId()))
+						.firstName(userEntity.getFirstName())
+						.lastName(userEntity.getLastName())
+						.build();
+	}*/
+
 	@Override
 	public UserDto create(UserDto userDto) {
 		UserEntity userEntity = new UserEntity();
@@ -71,19 +81,36 @@ public class UserService implements IUserService {
 
 
 	@Override
-	public AccountDto createAccount(AccountDto accountDto) {
+	public AccountDto createAccount(long userId, AccountDto accountDto) {
 		AccountEntity account = new AccountEntity();
 		account.setAccountNumber(accountDto.getAccountNumber());
 		account.setType("Epargne");
 		account.setAmount(0);
-		account.setUserId(accountDto.getUserId());
+		account.setUserEntity(UserDtoToEntityUser(getUserById(String.valueOf(userId)).get()));
 
 		AccountEntity account1 = accountRepository.save(account);
 		return AccountDto.builder()
 				.accountNumber(account1.getAccountNumber())
 				.amount(account1.getAmount())
-				.userId(account1.getUserId())
+				.userId(Math.toIntExact(account1.getUserEntity().getId()))
 				.build();
+	}
+
+	public AccountEntity dtoAccountToEntityAccount(AccountDto accountDto){
+		AccountEntity ae = new AccountEntity();
+		ae.setAccountNumber(accountDto.getAccountNumber());
+		ae.setAmount(accountDto.getAmount());
+		ae.setType(accountDto.getType());
+
+	return ae;
+	}
+
+	public UserEntity UserDtoToEntityUser(UserDto userDto){
+		UserEntity ue = new UserEntity();
+		ue.setLastName(userDto.getLastName());
+		ue.setFirstName(userDto.getFirstName());
+		ue.setId(Long.valueOf(userDto.getId()));
+		return ue;
 	}
 
 	@Override
