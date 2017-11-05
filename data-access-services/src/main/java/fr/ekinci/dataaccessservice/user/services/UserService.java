@@ -1,19 +1,24 @@
 package fr.ekinci.dataaccessservice.user.services;
 
-import com.sun.media.jfxmedia.logging.Logger;
+
+import fr.ekinci.clientmodels.user.models.*;
+import fr.ekinci.dataaccessservice.user.entities.HistoryEntity;
 import fr.ekinci.dataaccessservice.user.entities.PhonesEntity;
-import fr.ekinci.dataaccessservice.user.models.*;
+
 import fr.ekinci.dataaccessservice.user.entities.AccountEntity;
 import fr.ekinci.dataaccessservice.user.entities.UserEntity;
-//import fr.ekinci.clientmodels.user.models.AccountDto;
+//import fr.ekinci.clientmodels.Advisor.models.AccountDto;
 import fr.ekinci.dataaccessservice.user.repositories.AccountRepository;
+import fr.ekinci.dataaccessservice.user.repositories.HistoryRepository;
 import fr.ekinci.dataaccessservice.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,14 +26,18 @@ public class UserService implements IUserService {
 
 	private final UserRepository userRepository;
 	private final AccountRepository accountRepository;
-	private static java.util.logging.Logger logger;
+	private final HistoryRepository historyRepository;
+
+	private static Logger logger;
 
 
 	@Autowired
-	public UserService(UserRepository userRepository, AccountRepository accountRepository) {
+	public UserService(UserRepository userRepository, AccountRepository accountRepository, HistoryRepository historyRepository) {
 		this.userRepository = userRepository;
 		this.accountRepository = accountRepository;
+		this.historyRepository = historyRepository;
 	}
+
 
 	@Override
 	public List<UserDto> getAll() {
@@ -43,6 +52,7 @@ public class UserService implements IUserService {
 			)
 			.collect(Collectors.toList());
 	}
+
 
     public List<AccountDto> getAccountsByUserId(String id) {
         return  accountRepository.getAccountByTypeAndUserId(Long.parseLong(id))
@@ -87,11 +97,12 @@ public class UserService implements IUserService {
 	}
 
 
-
-
     public Optional<AccountDto> getAccountByTypeAndUserId(String type, long id) {
 	    System.out.print("Parametre recus : "+type+id);
         List<AccountEntity> accountEntity1 = accountRepository.getAccountByTypeAndUserId(type,id);
+        if(accountEntity1.isEmpty()){
+        	return Optional.empty();
+		}
         AccountEntity accountEntity =  accountEntity1.get(0);
         return (accountEntity != null) ?
                 Optional.of(
@@ -108,7 +119,7 @@ public class UserService implements IUserService {
 
 		List<AccountDto> accountDto = getAccountsByUserId(id);
 		UserDto userDto = getUserById(id).get();
-		System.out.println("Info user : "+userDto.getFirstName());
+		System.out.println("Info Advisor : "+userDto.getFirstName());
 
 		return (accountDto != null || userDto !=null) ?
 				Optional.of(
@@ -121,23 +132,13 @@ public class UserService implements IUserService {
 	}
 
 
-
-
-/*	public UserDto getUserById2(String id) {
-		UserEntity userEntity = userRepository.findOne(Long.parseLong(id));
-				return UserDto.builder()
-						.id(String.valueOf(userEntity.getId()))
-						.firstName(userEntity.getFirstName())
-						.lastName(userEntity.getLastName())
-						.build();
-	}*/
-
 	@Override
 	public UserDto create(UserDto userDto) {
 		UserEntity userEntity = new UserEntity();
 		userEntity.setFirstName(userDto.getFirstName());
 		userEntity.setLastName(userDto.getLastName());
 		userEntity.setPhonesEntity(phoneDtoToEntityPhone(userDto));
+		userEntity.setDateOfBirth(userDto.getDateOfBirth());
 
 		UserEntity userEntity1 = userRepository.save(userEntity);
 		return UserDto.builder()
@@ -151,24 +152,26 @@ public class UserService implements IUserService {
 
 
 	@Override
-	public AccountDto createAccount(long userId, AccountDto accountDto) {
+	public Optional<AccountDto> createAccount(long userId, AccountDto accountDto) {
 		AccountEntity account = new AccountEntity();
 		account.setType(accountDto.getType().toString());
 		account.setAmount(Long.parseLong(accountDto.getAmount()));
 		account.setUserEntity(UserDtoToEntityUser(getUserById(String.valueOf(userId)).get()));
         Optional<AccountDto> accountDto1 = getAccountByTypeAndUserId(accountDto.getType().toString(),userId);
         if(accountDto1.isPresent()){
-            return accountDto;
+            return accountDto1;
         }
 		AccountEntity account1 = accountRepository.save(account);
-		return AccountDto.builder()
+		return (account!= null) ?
+				Optional.of(
+				AccountDto.builder()
 				.accountNumber(String.valueOf(account1.getAccountNumber()))
 				.amount(String.valueOf(account1.getAmount()))
 				.userId(String.valueOf(account1.getUserEntity().getId()))
-				.build();
+				.build()
+				)
+				: Optional.empty();
 	}
-
-
 
 
 	public AccountEntity dtoAccountToEntityAccount(AccountDto accountDto){
@@ -195,6 +198,20 @@ public class UserService implements IUserService {
 
 
 	@Override
+	public List<HistoryDto> getAllHistoryByUserId(long userId) {
+		return historyRepository.searchAll(userId)
+				.stream()
+				.map(
+						h -> HistoryDto.builder()
+								.type(TypeAccountDto.valueOf(h.getType().toString()))
+								.amount(h.getAmount())
+								.date(h.getDate().toString())
+								.build()
+				)
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public void delete(String id) {
 
 	}
@@ -207,20 +224,32 @@ public class UserService implements IUserService {
 	@Override
 	public String addMoney(long userId, long amount, String accountType) {
 		String msg;
+		Calendar currenttime = Calendar.getInstance();
+
+		Date sqldate = new Date((currenttime.getTime()).getTime());
+
 		try{
-            AccountDto accountDto = getAccountByTypeAndUserId(accountType,userId).get();
+			System.out.print("---------> Date : "+sqldate+"\n");
+			AccountDto accountDto = getAccountByTypeAndUserId(accountType,userId).get();
 			//----------------- very bad way ... avoid ! -----------------
 			long current = Long.parseLong(accountDto.getAmount());
 			current = current + amount;
             //------------------------------------------------------------
 
+			HistoryEntity h = new HistoryEntity();
+			h.setAmount("+"+amount);
+			h.setType(accountDto.getType().toString());
+			h.setDate(sqldate);
+			h.setUserEntity(UserDtoToEntityUser(getUserById(String.valueOf(userId)).get()));
+
             if(validAccountType(accountDto.getType())){
                 accountRepository.updateAmount(current,Long.parseLong(accountDto.getAccountNumber()));
+                historyRepository.save(h);
                 msg="Vous avez déposé "+amount+" €";
             }else
                 msg = "Dépôt non autorisé !";
 		}catch (Exception e){
-			logger.info("Error on addMoney ! "+e);
+			//logger.info("Error on addMoney ! "+e);
 
 			msg = "Erreur lors de l'ajout d'argent !";
 		}
@@ -230,20 +259,33 @@ public class UserService implements IUserService {
 	@Override
 	public String removeMoney(long userId, long amount, String accountType) {
 		String msg;
+		Calendar currenttime = Calendar.getInstance();
+
 		try{
-            AccountDto accountDto = getAccountByTypeAndUserId(accountType,userId).get();
+			Date sqldate = new Date((currenttime.getTime()).getTime());
+
+			AccountDto accountDto = getAccountByTypeAndUserId(accountType,userId).get();
 			//----------------- very bad way ... avoid ! -----------------
 			long current = Long.parseLong(accountDto.getAmount());
 			current = current - amount;
             //------------------------------------------------------------
 
+
+			HistoryEntity h = new HistoryEntity();
+			h.setAmount("-"+amount);
+			h.setType(accountDto.getType().toString());
+			h.setDate(sqldate);
+			h.setUserEntity(UserDtoToEntityUser(getUserById(String.valueOf(userId)).get()));
+
             if(validAccountType(accountDto.getType())){
                 accountRepository.updateAmount(current,Long.parseLong(accountDto.getAccountNumber()));
-                msg="Vous avez retiré"+amount+" €";
+				historyRepository.save(h);
+
+				msg="Vous avez retiré"+amount+" €";
 			}else
                 msg = "Retrait non autorisé !";
 		}catch (IllegalAccessError e){
-			logger.info("Error on removeMoney ! "+e);
+			//logger.info("Error on removeMoney ! "+e);
 			msg = "Erreur lors du retrait d'argent !";
 		}
 		return msg;

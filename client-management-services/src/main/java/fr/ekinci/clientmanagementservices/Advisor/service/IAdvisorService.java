@@ -1,8 +1,11 @@
-package fr.ekinci.clientmanagementservices.user.service;
+package fr.ekinci.clientmanagementservices.Advisor.service;
 
 
 import fr.ekinci.clientmodels.user.models.AccountDto;
 import fr.ekinci.clientmodels.user.models.UserDto;
+import fr.ekinci.clientmodels.user.models.UserInfoDto;
+
+import java.util.Optional;
 
 /**
  * Created by Ance on 30/10/2017.
@@ -10,11 +13,11 @@ import fr.ekinci.clientmodels.user.models.UserDto;
 public interface IAdvisorService {
     AccountDto createAccount(AccountDto accountDto);
 
-    void update(UserDto userDto);
-
     AccountDto getClientAccountById(long userId);
 
-    UserDto getClient(int userId);
+    Optional<UserInfoDto> getUserInfoById(String id);
 
-    void createClient();
+    UserDto getUserById(long userId);
+
+    UserDto createUser(UserDto userDto);
 }

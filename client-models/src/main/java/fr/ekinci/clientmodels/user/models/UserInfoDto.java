@@ -1,4 +1,4 @@
-package fr.ekinci.dataaccessservice.user.models;
+package fr.ekinci.clientmodels.user.models;
 
 import lombok.Builder;
 import lombok.Data;

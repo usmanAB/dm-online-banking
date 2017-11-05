@@ -1,9 +1,11 @@
-package fr.ekinci.clientmanagementservices.user.controllers;
+package fr.ekinci.clientmanagementservices.Advisor.controllers;
 
 
-import fr.ekinci.clientmanagementservices.user.service.AdvisorService;
+import fr.ekinci.clientmanagementservices.Advisor.service.AdvisorService;
+import fr.ekinci.clientmanagementservices.Advisor.restutils.Rest;
 import fr.ekinci.clientmodels.user.models.AccountDto;
 import fr.ekinci.clientmodels.user.models.UserDto;
+import fr.ekinci.clientmodels.user.models.UserInfoDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +18,16 @@ import java.util.Optional;
  * @author Gokan EKINCI
  */
 @RestController
-@RequestMapping(path = "/users")
-public class UserController {
+@RequestMapping(path = "/advisor")
+public class AdvisorController {
 	private AdvisorService advisorService;
+	private static Rest rest;
 
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<UserDto> get(@PathVariable Long id) {
+	public ResponseEntity<UserDto> get(@PathVariable long id) {
 		// TODO
-		final Optional<UserDto> dtoOpt = Optional.of(new UserDto());
+		final Optional<UserDto> dtoOpt = Optional.of(advisorService.getUserById(id));
 		return (dtoOpt.isPresent()) ?
 			new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -60,30 +63,41 @@ public class UserController {
 			new ResponseEntity<>(userDtoList, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@RequestMapping(path = "/client", method = RequestMethod.POST)
-	public ResponseEntity<UserDto> createClient(@RequestBody UserDto user) {
-		return new ResponseEntity<>(new UserDto(), HttpStatus.OK);
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
+		System.out.print("----> APPEL CREATEUSER FROM CLIENT MANAGEMENT  : \n");
+
+		final Optional<UserDto> dtoOpt = Optional.of(rest.createUser(user));
+		return (dtoOpt.isPresent()) ?
+				new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.CONFLICT);
+
 	}
 
-	@RequestMapping(path = "/account", method = RequestMethod.POST)
-	public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
+	@RequestMapping(path = "/userInfo/{id}", method = RequestMethod.GET)
+	public ResponseEntity<UserInfoDto> getUserInfo(@PathVariable String id) {
 
-		//advisorService.createAccount(accountDto);
+		final Optional<UserInfoDto> dtoOpt = Optional.of(rest.getUserInfo(id));
 
-		return new ResponseEntity<>(advisorService.createAccount(accountDto), HttpStatus.OK);
+		return (dtoOpt.isPresent()) ?
+				new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-
-	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> update(@PathVariable String id, @RequestBody UserDto user) {
-		// TODO
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> delete(@PathVariable String id) {
 		// TODO
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+
+	@RequestMapping(path = "/account/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> createAccount(@PathVariable long id, @RequestBody AccountDto accountDto) {
+		final Optional<AccountDto> dtoOpt = Optional.of(rest.createAccount(id,accountDto));
+
+//		logger.info("APPEL createAccount \n id : "+id+ "\n");
+
+		return (dtoOpt.isPresent()) ?
+				new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 

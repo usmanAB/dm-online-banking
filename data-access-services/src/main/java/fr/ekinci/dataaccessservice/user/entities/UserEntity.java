@@ -1,6 +1,7 @@
 package fr.ekinci.dataaccessservice.user.entities;
 
-import fr.ekinci.dataaccessservice.user.models.PhonesDto;
+import fr.ekinci.clientmodels.user.models.HistoryDto;
+import fr.ekinci.clientmodels.user.models.PhonesDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,14 +28,20 @@ public class UserEntity implements java.io.Serializable {
 
    // @JoinColumn(name="id", referencedColumnName="account_number")
 	//private AccountEntity accountEntity;
-//    @OneToMany(mappedBy = "user")
+//    @OneToMany(mappedBy = "Advisor")
     private AccountEntity accountEntity;
+
+	private HistoryEntity historyEntity;
 
 
 	private PhonesEntity phonesEntity;
 
 
-    @OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "userEntity")
+	public Set<HistoryEntity> history;
+
+
+	@OneToMany(mappedBy = "userEntity")
     public Set<AccountEntity> account;
 
 

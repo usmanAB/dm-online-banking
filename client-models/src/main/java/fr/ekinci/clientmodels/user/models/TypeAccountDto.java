@@ -1,4 +1,4 @@
-package fr.ekinci.dataaccessservice.user.models;
+package fr.ekinci.clientmodels.user.models;
 
 /**
  * Created by Usman ABID BUTT on 04/11/2017.

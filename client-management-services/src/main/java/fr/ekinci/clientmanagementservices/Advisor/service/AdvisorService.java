@@ -1,8 +1,11 @@
-package fr.ekinci.clientmanagementservices.user.service;
+package fr.ekinci.clientmanagementservices.Advisor.service;
 
 import fr.ekinci.clientmodels.user.models.AccountDto;
 import fr.ekinci.clientmodels.user.models.UserDto;
+import fr.ekinci.clientmodels.user.models.UserInfoDto;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
 
 /**
  * Created by Ance on 30/10/2017.
@@ -18,14 +21,17 @@ public class AdvisorService implements IAdvisorService {
         return accountDtoResponse;
     }
 
-    public void createClient() {
+    public UserDto createUser(UserDto user) {
+        System.out.print("----> APPEL CREATEUSER FROM ADVISOR SERVICE  :"+user.getFirstName()+" \n");
+
+        final String uri = "http://localhost:25002/data-access/users";
+
+        RestTemplate restTemplate = new RestTemplate();
+        UserDto userDto = restTemplate.postForObject(uri,user ,UserDto.class);
+        return userDto;
 
     }
 
-    @Override
-    public void update(UserDto userDto) {
-
-    }
 
     @Override
     public AccountDto getClientAccountById(long userId)
@@ -38,7 +44,12 @@ public class AdvisorService implements IAdvisorService {
     }
 
     @Override
-    public UserDto getClient(int userId) {
+    public Optional<UserInfoDto> getUserInfoById(String id) {
+        return null;
+    }
+
+    @Override
+    public UserDto getUserById(long userId) {
         return null;
     }
 
