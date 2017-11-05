@@ -18,8 +18,12 @@ Step 4 :
 # Project's  structure
   
 There are 5 modules :
-  
+
+* ***aspectj-aop-utils***  
 * ***client-management-services***  
+* ***client-models***  
+* ***client-services***  
+* ***data-access-service***  
  
 
 # Class diagram
