@@ -31,6 +31,11 @@ There are 5 modules :
 ![alt text](http://image.noelshack.com/fichiers/2017/44/7/1509916792-classdiagram1.jpg) 
 
 
+# Class diagram (generate by IntelliJ IDE)
+
+<a href="http://www.noelshack.com/2017-44-7-1509916989-intellijdiagramme.png"><img src="http://image.noelshack.com/minis/2017/44/7/1509916989-intellijdiagramme.png" border="0" alt="1509916989-intellijdiagramme.png - envoi d'image avec NoelShack" title="1509916989-intellijdiagramme.png"/></a>
+
+
 # Deployment diagram 
 
 
