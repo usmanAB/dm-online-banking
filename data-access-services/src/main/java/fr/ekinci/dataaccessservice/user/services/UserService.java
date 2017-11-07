@@ -11,6 +11,7 @@ import fr.ekinci.dataaccessservice.user.entities.UserEntity;
 import fr.ekinci.dataaccessservice.user.repositories.AccountRepository;
 import fr.ekinci.dataaccessservice.user.repositories.HistoryRepository;
 import fr.ekinci.dataaccessservice.user.repositories.UserRepository;
+import fr.ekinci.dataaccessservice.user.utils.UserServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class UserService implements IUserService {
 		this.accountRepository = accountRepository;
 		this.historyRepository = historyRepository;
 	}
+
 
 
 	@Override
@@ -205,6 +207,7 @@ public class UserService implements IUserService {
 						h -> HistoryDto.builder()
 								.type(TypeAccountDto.valueOf(h.getType().toString()))
 								.amount(h.getAmount())
+								.userId(String.valueOf(h.getId()))
 								.date(h.getDate().toString())
 								.build()
 				)
@@ -242,7 +245,7 @@ public class UserService implements IUserService {
 			h.setDate(sqldate);
 			h.setUserEntity(UserDtoToEntityUser(getUserById(String.valueOf(userId)).get()));
 
-            if(validAccountType(accountDto.getType())){
+            if(UserServiceUtils.validAccountType(accountDto.getType().name().toString())){
                 accountRepository.updateAmount(current,Long.parseLong(accountDto.getAccountNumber()));
                 historyRepository.save(h);
                 msg="Vous avez déposé "+amount+" €";
@@ -277,7 +280,7 @@ public class UserService implements IUserService {
 			h.setDate(sqldate);
 			h.setUserEntity(UserDtoToEntityUser(getUserById(String.valueOf(userId)).get()));
 
-            if(validAccountType(accountDto.getType())){
+            if(UserServiceUtils.validAccountType(accountDto.getType().name().toString())){
                 accountRepository.updateAmount(current,Long.parseLong(accountDto.getAccountNumber()));
 				historyRepository.save(h);
 
@@ -291,10 +294,10 @@ public class UserService implements IUserService {
 		return msg;
 	}
 
+	//NOT ALLOW TO USER TO remove or add money from LDDS account
+	public boolean validAccountType(String type){
 
-	public boolean validAccountType(TypeAccountDto type){
-
-        if(type.name().equals("LDDS")){
+        if(type.equals("LDDS")){
             return false;
         }
         else

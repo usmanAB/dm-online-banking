@@ -23,6 +23,7 @@ public class Rest {
         return msg;
     }
 
+
     public static String removeMoney(long id,long amount,String accountType) {
         System.out.print("----> APPEL remove FROM CLIENT REST  :"+id+" \n");
 
@@ -32,8 +33,6 @@ public class Rest {
         String msg = restTemplate.postForObject(uri,null,String.class,id,amount,accountType);
         return msg;
     }
-
-
 
 
     public static List<AccountDto> getAccountsByUserId(String id) {

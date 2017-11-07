@@ -46,7 +46,7 @@ public class AdvisorController {
 
 
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(path = "/users",method = RequestMethod.POST)
     public ResponseEntity<UserDto> create(@RequestBody UserDto user) {
         return new ResponseEntity<>(userService.create(user), HttpStatus.OK);
     }

@@ -10,9 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static java.util.Calendar.DATE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
 /**
  * @author Gokan EKINCI
@@ -24,21 +29,13 @@ public class AdvisorController {
 	private static Rest rest;
 
 
-	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<UserDto> get(@PathVariable long id) {
+	@RequestMapping(path = "/client/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getUserById(@PathVariable String id) {
 		// TODO
-		final Optional<UserDto> dtoOpt = Optional.of(advisorService.getUserById(id));
+		final Optional<UserDto> dtoOpt = Optional.of(rest.getUserById(id));
 		return (dtoOpt.isPresent()) ?
-			new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	@RequestMapping(path = "/clientAccount/{id}", method = RequestMethod.GET)
-	public ResponseEntity<AccountDto> getClientAccount(@PathVariable Long id) {
-
-		return new ResponseEntity<>(advisorService.getClientAccountById(id), HttpStatus.OK);
-
-
-	}
+				new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.CONFLICT);
+}
 
 	/**
 	 * If page and size request parameters are filled, return a page. Otherwise, return a list of all elements.
@@ -63,7 +60,7 @@ public class AdvisorController {
 			new ResponseEntity<>(userDtoList, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(path = "/client",method = RequestMethod.POST)
 	public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
 		System.out.print("----> APPEL CREATEUSER FROM CLIENT MANAGEMENT  : \n");
 
@@ -92,13 +89,59 @@ public class AdvisorController {
 
 	@RequestMapping(path = "/account/{id}", method = RequestMethod.POST)
 	public ResponseEntity<?> createAccount(@PathVariable long id, @RequestBody AccountDto accountDto) {
-		final Optional<AccountDto> dtoOpt = Optional.of(rest.createAccount(id,accountDto));
+		UserInfoDto userInfoDto = rest.getUserInfo(String.valueOf(id));
 
-//		logger.info("APPEL createAccount \n id : "+id+ "\n");
+		String msg ="Age valide !";
+		boolean validAge = validAccountAge(userInfoDto.getUserDto().getDateOfBirth(),accountDto.getType().name().toString());
 
-		return (dtoOpt.isPresent()) ?
-				new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		if(validAge){
+			final Optional<AccountDto> dtoOpt = Optional.of(rest.createAccount(id,accountDto));
+			return new ResponseEntity<>(dtoOpt.get(), HttpStatus.OK);
+		}
+		else
+			return new ResponseEntity<>("ko",HttpStatus.CONFLICT);
 	}
+
+
+
+	public boolean validAccountAge(String userDate, String type){
+		System.out.print("FONCTION VALIDACCOUNTAGE");
+		String date1 = userDate;
+
+		DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		Date now = new Date();
+		try {
+			Date date2 = format.parse(date1);
+			int age = getDiffYears(date2,now);
+
+			if(age>18 && type.equals("LIVRETJEUNE")){
+				//System.out.println("Erreur age insuffisant ! "+age);
+				return false;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	public static int getDiffYears(Date first, Date last) {
+		Calendar a = getCalendar(first);
+		Calendar b = getCalendar(last);
+		int diff = b.get(YEAR) - a.get(YEAR);
+		if (a.get(MONTH) > b.get(MONTH) ||
+				(a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
+			diff--;
+		}
+		return diff;
+	}
+
+	public static Calendar getCalendar(Date date) {
+		Calendar cal = Calendar.getInstance(Locale.US);
+		cal.setTime(date);
+		return cal;
+	}
+
 
 
 

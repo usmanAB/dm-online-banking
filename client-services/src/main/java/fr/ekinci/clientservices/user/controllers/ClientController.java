@@ -23,13 +23,9 @@ public class ClientController {
 
     @RequestMapping(path = "/addMoney/{id}/{amount}/{accountType}", method = RequestMethod.POST)
     public ResponseEntity<?> addMoney(@PathVariable long id, @PathVariable long amount, @PathVariable String accountType) {
-        //	logger.info("APPEL addMoney \n id : "+id+ "\n amount : " + amount+ "\n accounType : "+accountType+"\n");
 
-
-        System.out.println("ID recu pour retrait argent: "+id);
 
         String msg = rest.addMoney(id,amount, accountType);
-        System.out.println("ID recu pour remove argent: "+id);
         return new ResponseEntity<>(msg, HttpStatus.OK);
 
     }
@@ -39,10 +35,8 @@ public class ClientController {
         //	logger.info("APPEL addMoney \n id : "+id+ "\n amount : " + amount+ "\n accounType : "+accountType+"\n");
 
 
-        System.out.println("ID recu pour retrait argent: "+id);
-
         String msg = rest.removeMoney(id,amount, accountType);
-        System.out.println("ID recu pour remove argent: "+id);
+
         return new ResponseEntity<>(msg, HttpStatus.OK);
 
     }
@@ -56,7 +50,7 @@ public class ClientController {
 
     @RequestMapping(path = "/historyInfo/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAllHistory(@PathVariable long id) {
-//		logger.info("APPEL getAllHistory \n id : "+id+ "\n");
+
         final List<HistoryDto> list = rest.getAllHistoryByUserId(id);
         return (!list.isEmpty()) ?
                 new ResponseEntity<>(list, HttpStatus.OK) : new ResponseEntity<>("Aucun historique !",HttpStatus.NO_CONTENT);

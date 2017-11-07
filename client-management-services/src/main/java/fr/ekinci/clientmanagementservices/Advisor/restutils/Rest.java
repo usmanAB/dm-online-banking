@@ -5,6 +5,8 @@ import fr.ekinci.clientmodels.user.models.UserDto;
 import fr.ekinci.clientmodels.user.models.UserInfoDto;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 /**
  * Created by Usman ABID BUTT on 05/11/2017.
  */
@@ -42,6 +44,17 @@ public class Rest {
         AccountDto account = restTemplate.postForObject(uri,accountDto,AccountDto.class,id);
 
         return account;
+    }
+
+    public static UserDto getUserById(String id){
+        System.out.print("----> APPEL getUserById FROM ADVISOR REST  :"+id+" \n");
+        //We have to use headers....
+        final String uri = "http://localhost:25002/data-access/client/{id}";
+
+        RestTemplate restTemplate = new RestTemplate();
+        UserDto userDto = restTemplate.getForObject(uri,UserDto.class,id);
+
+        return userDto;
     }
 
 

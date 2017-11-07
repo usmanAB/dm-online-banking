@@ -8,10 +8,6 @@ import fr.ekinci.clientmodels.user.models.UserDto;
  */
 public interface IClientService {
 
-    long getAccountBalance(UserDto userDto);
 
-    void addMoney(AccountDto accountDto, int amount);
-
-    void getMoney(AccountDto accountDto, int amount);
 
 }
