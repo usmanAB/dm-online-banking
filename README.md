@@ -10,6 +10,13 @@ mvn spring-boot:run
 ***Create user :*** 
 
 http://localhost:25001/client-management/advisor/client
+Body : 
+
+{"lastName":"moi",
+"firstName":"test",
+"phone":"0000000000",
+"dateOfBirth":"01-01-1994"}
+
 
 Response :
 {"lastName":"Usman",
@@ -35,23 +42,23 @@ Response  :
 ***Créeate account to a user :***
 
 http://localhost:25001/client-management/advisor/account/1
-
+Body : 
 {"type":"CC",
 "amount":"0"
 }
 
-The same account did'nt create (check Database)
+The same account cant't be created (check Database)
 
 
 ***Create livret jeune account :***
 
 http://localhost:25001/client-management/advisor
-
+Body : 
 {"type":"LIVRETJEUNE",
 "amount":"0"
 }
 
-Remarque : Impossible pour les plus de 18 ans.
+Remarque : Unauthorized for 18 years old client.
 
 
 ***CLIENT***
